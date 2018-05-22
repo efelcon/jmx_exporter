@@ -1,0 +1,272 @@
+rules:
+- pattern: kafka\.streams<type=stream-processor-node-metrics, client-id=([^-]*).*Thread-(\d+), processor-node-id=([^-]*)-(.*)-(\d+)><>task\.(.*)\..*-\d+-(.*):.*
+  name: "kafka_streams_stream_processor_node_$7"
+  labels:
+    client-id: "$1"
+    thread: "$2"
+    processor_class: "$3"
+    processor_type: "$4"
+    processor_id: "$5"
+    task_id: "$6"
+  type: COUNTER
+  valueFactor: 1
+- pattern: kafka\.streams<type=stream-processor-node-metrics, client-id=([^-]*).*Thread-(\d+), processor-node-id=([^-]*)-(.*)-(\d+)><>(all)-(.*):.*
+  name: "kafka_streams_stream_processor_node_$6_$7"
+  labels:
+    client_id: "$1"
+    thread: "$2"
+    processor_class: "$3"
+    processor_type: "$4"
+    processor_id: "$5"
+  type: COUNTER
+  valueFactor: 1
+- pattern: kafka\.streams<type=stream-task-metrics, client-id=([^-]*)-.*Thread-(\d+), streams-task-id=(\w+)><>\w+-(.*):.*
+  name: "kafka_streams_stream_task_$4"
+  labels:
+    client_id: "$1"
+    thread: "$2"
+    task_id: "$3"
+  type: COUNTER
+  valueFactor: 1
+- pattern: kafka\.streams<type=stream-rocksdb-state-metrics, client-id=([^-]*)-.*Thread-(\d+)><>(\w+)-(.*):.*
+  name: "kafka_streams_stream_rocksdb_state_$4"
+  labels:
+    client_id: "$1"
+    thread: "$2"
+    group: "$3"
+  type: COUNTER
+  valueFactor: 1
+- pattern: kafka\.streams<type=stream-record-cache-metrics, record-cache-id=(([^-]*)-(.*))><>[^-]*-[^-]*-(.*):.*
+  name: "kafka_streams_stream_record_cache_$4"
+  labels:
+    record_cache_id: "$1"
+    task_id: "$2"
+    group: "$3"
+  type: COUNTER
+  valueFactor: 1
+- pattern: kafka\.streams<type=stream-metrics, client-id=([^-]*)-.*Thread-(\d+)><>(.*):.*
+  name: "kafka_streams_stream_$3"
+  labels:
+    client_id: "$1"
+    thread: "$2"
+  type: COUNTER
+  valueFactor: 1
+
+- pattern: kafka\.consumer<type=consumer-fetch-manager-metrics, client-id=([^-]*)-.*Thread-(\d+)-(.*), topic=([^>]*)><>(.*):.*
+  name: "kafka_streams_consumer_fetch_manager_$5"
+  labels:
+    client_id: "$1"
+    thread: "$2"
+    type: "$3"
+    topic: "$4"
+  type: COUNTER
+  valueFactor: 1
+- pattern: kafka\.consumer<type=consumer-fetch-manager-metrics, client-id=([^-]*)-.*Thread-(\d+)-([^>]*)><>[^-]*-(.*)-repartition-(\d+)\.(.*):.*
+  name: "kafka_streams_consumer_fetch_manager_$6"
+  labels:
+    client_id: "$1"
+    thread: "$2"
+    type: "$3"
+    group: "$4"
+    partition: "$5"
+  type: COUNTER
+  valueFactor: 1
+- pattern: kafka\.consumer<type=consumer-fetch-manager-metrics, client-id=([^-]*)-.*Thread-(\d+)-([^>]*)><>([^-]*)-(\d+)\.(.*):.*
+  name: "kafka_streams_consumer_fetch_manager_$6"
+  labels:
+    client_id: "$1"
+    thread: "$2"
+    type: "$3"
+    topic: "$4"
+    partition: "$5"
+  type: COUNTER
+  valueFactor: 1
+- pattern: kafka\.consumer<type=consumer-fetch-manager-metrics, client-id=([^-]*)-.*Thread-(\d+)-([^>]*)><>(.*):.*
+  name: "kafka_streams_consumer_fetch_manager_$4"
+  labels:
+    client_id: "$1"
+    thread: "$2"
+    type: "$3"
+  type: COUNTER
+  valueFactor: 1
+- pattern: kafka\.consumer<type=consumer-node-metrics, client-id=([^-]*)-.*Thread-(\d+)-([^,]*), node-id=([^>]*)><>(.*):.*
+  name: "kafka_streams_consumer_node_$5"
+  labels:
+    client_id: "$1"
+    thread: "$2"
+    type: "$3"
+    node_id: "$4"
+  type: COUNTER
+  valueFactor: 1
+- pattern: kafka\.consumer<type=consumer-coordinator-metrics, client-id=([^-]*)-.*Thread-(\d+)-([^>]*)><>(.*):.*
+  name: "kafka_streams_consumer_coordinator_$4"
+  labels:
+    client_id: "$1"
+    thread: "$2"
+    type: "$3"
+  type: COUNTER
+  valueFactor: 1
+- pattern: kafka\.consumer<type=consumer-metrics, client-id=([^-]*)-.*Thread-(\d+)-([^>]*)><>(.*):.*
+  name: "kafka_streams_consumer_$4"
+  labels:
+    client_id: "$1"
+    thread: "$2"
+    type: "$3"
+  type: COUNTER
+  valueFactor: 1
+
+- pattern: kafka\.producer<type=producer-node-metrics, client-id=([^-]*)-.*Thread-(\d+)-([^,]*), node-id=([^>]*)><>(.*):.*
+  name: "kafka_streams_producer_node_$5"
+  labels:
+    client_id: "$1"
+    thread: "$2"
+    type: "$3"
+    node_id: "$4"
+  type: COUNTER
+  valueFactor: 1
+- pattern: kafka\.producer<type=producer-metrics, client-id=([^-]*)-.*Thread-(\d+)-([^>]*)><>(.*):.*
+  name: "kafka_streams_producer_$4"
+  labels:
+    client_id: "$1"
+    thread: "$2"
+    type: "$3"
+  type: COUNTER
+  valueFactor: 1
+- pattern: kafka\.producer<type=producer-topic-metrics, client-id=([^-]*)-.*Thread-(\d+)-([^,]*), topic=([^>]*)><>(.*):.*
+  name: "kafka_streams_producer_$5"
+  labels:
+    client_id: "$1"
+    thread: "$2"
+    type: "$3"
+    topic: "$4"
+  type: COUNTER
+  valueFactor: 1
+
+## Metrics for Memory MBean
+- pattern: java\.lang<type=Memory><(\w+)MemoryUsage>(\w+)
+  name: "java_memory"
+  labels:
+    type: "$1"
+    key: "$2"
+  type: COUNTER
+  attrNameSnakeCase: false
+  valueFactor: 1
+- pattern: java\.lang<type=Memory><>(\w+)
+  name: "java_memory"
+  labels:
+    key: "$1"
+  type: COUNTER
+  valueFactor: 1
+## Metrics for GarbageCollector MBean
+- pattern: java\.lang<type=GarbageCollector, name=(.*), key=(.*?[^>])><(.*), (.*)>(\w+)
+  name: "java_garbage_collector_$5"
+  labels:
+    type: "$1"
+    key: "$2"
+    group: "$3"
+    when: "$4"
+  type: COUNTER
+  valueFactor: 1
+- pattern: java\.lang<type=GarbageCollector, name=(.*?[^>])><>(\w+)
+  name: "java_garbage_collector"
+  labels:
+    type: "$1"
+    key: "$2"
+  type: COUNTER
+  valueFactor: 1
+- pattern: java\.lang<type=GarbageCollector, name=(.*?[^>])><(\w+)>(\w+)
+  name: "java_garbage_collector_$3"
+  labels:
+    type: "$1"
+    group: "$2"
+  type: COUNTER
+  valueFactor: 1
+## Metrics for MemoryManager MBean
+- pattern: java\.lang<type=MemoryManager, name=(.*)><>(\w+)
+  name: "java_memory_manager"
+  labels:
+    type: "$1"
+    key: "$2"
+  type: COUNTER
+  valueFactor: 1
+## Metrics for MemoryPool MBean
+- pattern: java\.lang<type=MemoryPool, name=(.*?[^>])><(Usage)>(\w+)
+  name: "java_memory_pool_$3"
+  labels:
+    type: "$1"
+    group: "$2"
+  type: COUNTER
+  valueFactor: 1
+- pattern: java\.lang<type=MemoryPool, name=(.*?[^>])><(PeakUsage)>(\w+)
+  name: "java_memory_pool_$3"
+  labels:
+    type: "$1"
+    group: "$2"
+  type: COUNTER
+  valueFactor: 1
+- pattern: java\.lang<type=MemoryPool, name=(.*?[^>])><(CollectionUsage)>(\w+)
+  name: "java_memory_pool_$3"
+  labels:
+    type: "$1"
+    group: "$2"
+  type: COUNTER
+  valueFactor: 1
+- pattern: java\.lang<type=MemoryPool, name=(.*?[^>])><(UsageThreshold)>(\w+)
+  name: "java_memory_pool_$3"
+  labels:
+    type: "$1"
+    group: "$2"
+  type: COUNTER
+  valueFactor: 1
+## This one can be used in case all metrics groups are wanted
+#- pattern: java\.lang<type=MemoryPool, name=(.*?[^>])><(\w+)>(\w+)"
+#  name: "java_memory_pool_$3"
+#  labels:
+#    type: "$1"
+#    group: "$2"
+#  type: COUNTER
+#  valueFactor: 1
+## Memory pool base
+- pattern: java\.lang<type=MemoryPool, name=(.*?[^>])><>(\w+)
+  name: "java_memory_pool_$2"
+  labels:
+    type: "$1"
+  type: COUNTER
+  valueFactor: 1
+## Metrics for OperatingSystem MBean
+- pattern: java\.lang<type=OperatingSystem><>(\w+)
+  name: "java_operating_system"
+  labels:
+    key: "$1"
+  type: COUNTER
+  valueFactor: 1
+## Metrics for Runtime MBean
+- pattern: java\.lang<type=Runtime><>(\w+)
+  name: "java_runtime"
+  labels:
+    key: "$1"
+  type: COUNTER
+  valueFactor: 1
+## Metrics for Threading MBean
+- pattern: java\.lang<type=Threading><>(\w+)
+  name: "java_threading"
+  labels:
+    key: "$1"
+  type: COUNTER
+  valueFactor: 1
+## Metrics for ClassLoading MBean
+- pattern: java\.lang<type=ClassLoading><>(\w+)
+  name: "java_class_loading"
+  labels:
+    key: "$1"
+  type: COUNTER
+  valueFactor: 1
+## Metrics for Compilation MBean
+- pattern: java\.lang<type=Compilation><>(\w+)
+  name: "java_compilation"
+  labels:
+    key: "$1"
+  type: COUNTER
+  valueFactor: 1
+
+#- pattern: ".*"
