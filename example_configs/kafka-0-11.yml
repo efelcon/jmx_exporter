@@ -1,0 +1,412 @@
+rules:
+
+## Metric name ends with "PerSec"
+- pattern: kafka\.(\w+)<type=([^,>]+), name=(.+)PerSec><>Count:.*
+  name: kafka_broker_$1_$2_$3_total
+  valueFactor: 1
+  type: COUNTER
+  valueFactor: 1
+- pattern: kafka\.(\w+)<type=([^,>]+), name=(.+)PerSec><>(OneMinuteRate):.*
+  name: kafka_broker_$1_$2_$3_$4
+  type: COUNTER
+  valueFactor: 1
+#- pattern: kafka\.(\w+)<type=([^,>]+), name=(.+)PerSec><>(FiveMinuteRate|FifteenMinuteRate|MeanRate):.*
+#  name: kafka_broker_$1_$2_$3_$4
+#  type: COUNTER
+#  valueFactor: 1
+- pattern: kafka\.(\w+)<type=([^,>]+), name=(.+)PerSec, ([^=]+)=([^,>]+)><>Count:.*
+  name: kafka_broker_$1_$2_$3_total
+  labels:
+    "$4": "$5"
+  type: COUNTER
+  valueFactor: 1
+- pattern: kafka\.(\w+)<type=([^,>]+), name=(.+)PerSec, (\w+)=([^,>]+)><>(OneMinuteRate):.*
+  name: kafka_broker_$1_$2_$3_$6
+  labels:
+    "$4": "$5"
+  type: COUNTER
+  valueFactor: 1
+#- pattern: kafka\.(\w+)<type=([^,>]+), name=(.+)PerSec, (\w+)=([^,>]+)><>(FiveMinuteRate|FifteenMinuteRate|MeanRate):.*
+#  name: kafka_broker_$1_$2_$3_$6
+#  labels:
+#    "$4": "$5"
+#  type: COUNTER
+#  valueFactor: 1
+
+## Broker Host/Port
+- pattern: kafka\.server<type=(.+), name=(.+), clientId=(.+), brokerHost=(.+), brokerPort=(.+)><>Count:.*
+  name: kafka_broker_server_$1_$2_total
+  labels:
+    client_id: "$3"
+    broker: "$4:$5"
+  type: COUNTER
+  valueFactor: 1
+- pattern: kafka\.server<type=(.+), name=(.+), clientId=(.+), brokerHost=(.+), brokerPort=(.+)><>(Value):.*
+  name: kafka_broker_server_$1_$2_$6
+  labels:
+    client_id: "$3"
+    broker: "$4:$5"
+  type: COUNTER
+  valueFactor: 1
+- pattern: kafka\.server<type=(.+), name=(.+), clientId=(.+), brokerHost=(.+), brokerPort=(.+)><>(OneMinuteRate):.*
+  name: kafka_broker_server_$1_$2_$6
+  labels:
+    client_id: "$3"
+    broker: "$4:$5"
+  type: COUNTER
+  valueFactor: 1
+#- pattern: kafka\.server<type=(.+), name=(.+), clientId=(.+), brokerHost=(.+), brokerPort=(.+)><>(FiveMinuteRate|FifteenMinuteRate|MeanRate):.*
+#  name: kafka_broker_server_$1_$2_$6
+#  labels:
+#    client_id: "$3"
+#    broker: "$4:$5"
+#  type: COUNTER
+#  valueFactor: 1
+
+## Entries with only "name" as parameter
+- pattern: kafka\.(\w+)<type=([^,>]+), name=([^,>]+)><>Count:.*
+  name: kafka_broker_$1_$2_$3_total
+  type: COUNTER
+  valueFactor: 1
+- pattern: kafka\.(\w+)<type=([^,>]+), name=([^,>]+)><>(Value):.*
+  name: kafka_broker_$1_$2_$3_$4
+  type: COUNTER
+  valueFactor: 1
+- pattern: kafka\.(\w+)<type=([^,>]+), name=([^,>]+)><>(OneMinuteRate):.*
+  name: kafka_broker_$1_$2_$3_$4
+  type: COUNTER
+  valueFactor: 1
+#- pattern: kafka\.(\w+)<type=([^,>]+), name=([^,>]+)><>(FiveMinuteRate|FifteenMinuteRate|MeanRate):.*
+#  name: kafka_broker_$1_$2_$3_$4
+#  type: COUNTER
+#  valueFactor: 1
+- pattern: kafka\.(\w+)<type=([^,>]+), name=([^,>]+)><>(Mean):.*
+  name: kafka_broker_$1_$2_$3_$4
+  type: COUNTER
+  valueFactor: 1
+#- pattern: kafka\.(\w+)<type=([^,>]+), name=([^,>]+)><>(Min|Max|StdDev):.*
+#  name: kafka_broker_$1_$2_$3_$4
+#  type: COUNTER
+#  valueFactor: 1
+#- pattern: kafka\.(\w+)<type=([^,>]+), name=([^,>]+)><>(50thPercentile|75thPercentile|95thPercentile|98thPercentile|99thPercentile|999thPercentile):.*
+#  name: kafka_broker_$1_$2_$3_$4
+#  type: COUNTER
+#  valueFactor: 1
+
+## Entries with "name" and one parameter
+- pattern: kafka\.(\w+)<type=([^,>]+), name=([^,>]+), ([^=]+)=([^,>]+)><>Count:.*
+  name: kafka_broker_$1_$2_$3_total
+  labels:
+    "$4": "$5"
+  type: COUNTER
+  valueFactor: 1
+- pattern: kafka\.(\w+)<type=([^,>]+), name=([^,>]+), ([^=]+)=([^,>]+)><>(Value):.*
+  name: kafka_broker_$1_$2_$3_$6
+  labels:
+    "$4": "$5"
+  type: COUNTER
+  valueFactor: 1
+- pattern: kafka\.(\w+)<type=([^,>]+), name=([^,>]+), ([^=]+)=([^,>]+)><>(OneMinuteRate):.*
+  name: kafka_broker_$1_$2_$3_$6
+  labels:
+    "$4": "$5"
+  type: COUNTER
+  valueFactor: 1
+#- pattern: kafka\.(\w+)<type=([^,>]+), name=([^,>]+), ([^=]+)=([^,>]+)><>(FiveMinuteRate|FifteenMinuteRate|MeanRate):.*
+#  name: kafka_broker_$1_$2_$3_$6
+#  labels:
+#    "$4": "$5"
+#  type: COUNTER
+#  valueFactor: 1
+- pattern: kafka\.(\w+)<type=([^,>]+), name=([^,>]+), ([^=]+)=([^,>]+)><>(Mean):.*
+  name: kafka_broker_$1_$2_$3_$6
+  labels:
+    "$4": "$5"
+  type: COUNTER
+  valueFactor: 1
+#- pattern: kafka\.(\w+)<type=([^,>]+), name=([^,>]+), ([^=]+)=([^,>]+)><>(Min|Max|StdDev):.*
+#  name: kafka_broker_$1_$2_$3_$6
+#  labels:
+#    "$4": "$5"
+#  type: COUNTER
+#  valueFactor: 1
+#- pattern: kafka\.(\w+)<type=([^,>]+), name=([^,>]+), ([^=]+)=([^,>]+)><>(50thPercentile|75thPercentile|95thPercentile|98thPercentile|99thPercentile|999thPercentile):.*
+#  name: kafka_broker_$1_$2_$3_$6
+#  labels:
+#    "$4": "$5"
+#  type: COUNTER
+#  valueFactor: 1
+
+## Entries with "name" and two parameter
+- pattern: kafka\.(\w+)<type=([^,>]+), name=([^,>]+), ([^=]+)=([^,>]+), ([^=]+)=([^,>]+)><>Count:.*
+  name: kafka_broker_$1_$2_$3_total
+  labels:
+    "$4": "$5"
+    "$6": "$7"
+  type: COUNTER
+  valueFactor: 1
+- pattern: kafka\.(\w+)<type=([^,>]+), name=([^,>]+), ([^=]+)=([^,>]+), ([^=]+)=([^,>]+)><>(Value):.*
+  name: "kafka_broker_$1_$2_$3_$8"
+  labels:
+    "$4": "$5"
+    "$6": "$7"
+  type: COUNTER
+  valueFactor: 1
+- pattern: kafka\.(\w+)<type=([^,>]+), name=([^,>]+), ([^=]+)=([^,>]+), ([^=]+)=([^,>]+)><>(OneMinuteRate):.*
+  name: kafka_broker_$1_$2_$3_$8
+  labels:
+    "$4": "$5"
+    "$6": "$7"
+  type: COUNTER
+  valueFactor: 1
+#- pattern: kafka\.(\w+)<type=([^,>]+), name=([^,>]+), ([^=]+)=([^,>]+), ([^=]+)=([^,>]+)><>(FiveMinuteRate|FifteenMinuteRate|MeanRate):.*
+#  name: kafka_broker_$1_$2_$3_$8
+#  labels:
+#    "$4": "$5"
+#    "$6": "$7"
+#  type: COUNTER
+#  valueFactor: 1
+- pattern: kafka\.(\w+)<type=([^,>]+), name=([^,>]+), ([^=]+)=([^,>]+), ([^=]+)=([^,>]+)><>(Mean):.*
+  name: kafka_broker_$1_$2_$3_$8
+  labels:
+    "$4": "$5"
+    "$6": "$7"
+  type: COUNTER
+  valueFactor: 1
+#- pattern: kafka\.(\w+)<type=([^,>]+), name=([^,>]+), ([^=]+)=([^,>]+), ([^=]+)=([^,>]+)><>(Min|Max|StdDev):.*
+#  name: kafka_broker_$1_$2_$3_$8
+#  labels:
+#    "$4": "$5"
+#    "$6": "$7"
+#  type: COUNTER
+#  valueFactor: 1
+#- pattern: kafka\.(\w+)<type=([^,>]+), name=([^,>]+), ([^=]+)=([^,>]+), ([^=]+)=([^,>]+)><>(50thPercentile|75thPercentile|95thPercentile|98thPercentile|99thPercentile|999thPercentile):.*
+#  name: kafka_broker_$1_$2_$3_$8
+#  labels:
+#    "$4": "$5"
+#    "$6": "$7"
+#  type: COUNTER
+#  valueFactor: 1
+
+## Entries with "name" and three parameter
+- pattern: kafka\.(\w+)<type=([^,>]+), name=([^,>]+), ([^=]+)=([^,>]+), ([^=]+)=([^,>]+), ([^=]+)=([^,>]+)><>Count:.*
+  name: kafka_broker_$1_$2_$3_total
+  labels:
+    "$4": "$5"
+    "$6": "$7"
+    "$8": "$9"
+  type: COUNTER
+  valueFactor: 1
+- pattern: kafka\.(\w+)<type=([^,>]+), name=([^,>]+), ([^=]+)=([^,>]+), ([^=]+)=([^,>]+), ([^=]+)=([^,>]+)><>(Value):.*
+  name: kafka_broker_$1_$2_$3_$10
+  labels:
+    "$4": "$5"
+    "$6": "$7"
+    "$8": "$9"
+  type: COUNTER
+  valueFactor: 1
+- pattern: kafka\.(\w+)<type=([^,>]+), name=([^,>]+), ([^=]+)=([^,>]+), ([^=]+)=([^,>]+), ([^=]+)=([^,>]+)><>(OneMinuteRate):.*
+  name: kafka_broker_$1_$2_$3_$10
+  labels:
+    "$4": "$5"
+    "$6": "$7"
+    "$8": "$9"
+  type: COUNTER
+  valueFactor: 1
+#- pattern: kafka\.(\w+)<type=([^,>]+), name=([^,>]+), ([^=]+)=([^,>]+), ([^=]+)=([^,>]+), ([^=]+)=([^,>]+)><>(FiveMinuteRate|FifteenMinuteRate|MeanRate):.*
+#  name: kafka_broker_$1_$2_$3_$10
+#  labels:
+#    "$4": "$5"
+#    "$6": "$7"
+#    "$8": "$9"
+#  type: COUNTER
+#  valueFactor: 1
+- pattern: kafka\.(\w+)<type=([^,>]+), name=([^,>]+), ([^=]+)=([^,>]+), ([^=]+)=([^,>]+), ([^=]+)=([^,>]+)><>(Mean):.*
+  name: kafka_broker_$1_$2_$3_$10
+  labels:
+    "$4": "$5"
+    "$6": "$7"
+    "$8": "$9"
+  type: COUNTER
+  valueFactor: 1
+#- pattern: kafka\.(\w+)<type=([^,>]+), name=([^,>]+), ([^=]+)=([^,>]+), ([^=]+)=([^,>]+), ([^=]+)=([^,>]+)><>(Min|Max|StdDev):.*
+#  name: kafka_broker_$1_$2_$3_$10
+#  labels:
+#    "$4": "$5"
+#    "$6": "$7"
+#    "$8": "$9"
+#  type: COUNTER
+#  valueFactor: 1
+#- pattern: kafka\.(\w+)<type=([^,>]+), name=([^,>]+), ([^=]+)=([^,>]+), ([^=]+)=([^,>]+), ([^=]+)=([^,>]+)><>(50thPercentile|75thPercentile|95thPercentile|98thPercentile|99thPercentile|999thPercentile):.*
+#  name: kafka_broker_$1_$2_$3_$10
+#  labels:
+#    "$4": "$5"
+#    "$6": "$7"
+#    "$8": "$9"
+#  type: COUNTER
+#  valueFactor: 1
+
+## Entries without "name" and no parameter
+- pattern: kafka\.(\w+)<type=([^,>]+)><>(.*):.*
+  name: kafka_broker_$1_$2_$3
+  type: COUNTER
+  valueFactor: 1
+
+## Entries without "name" and one parameter
+- pattern: kafka\.(\w+)<type=([^,>]+), ((?!name)[^,>=]*)=([^,>]+)><>Count:.*
+  name: kafka_broker_$1_$2_$3_total
+  labels:
+    "$3": "$4"
+  type: COUNTER
+  valueFactor: 1
+- pattern: kafka\.(\w+)<type=([^,>]+), ((?!name)[^,>=]*)=([^,>]+)><>(.*):.*
+  name: kafka_broker_$1_$2_$5
+  labels:
+    "$3": "$4"
+  type: COUNTER
+  valueFactor: 1
+
+## Entries without "name" and two parameter
+- pattern: kafka\.(\w+)<type=([^,>]+), ((?!name)[^,>=]*)=([^,>]+), ((?!name)[^,>=]*)=([^,>]+)><>Count:.*
+  name: kafka_broker_$1_$2_total
+  labels:
+    "$3": "$4"
+    "$5": "$6"
+  type: COUNTER
+  valueFactor: 1
+- pattern: kafka\.(\w+)<type=([^,>]+), ((?!name)[^,>=]*)=([^,>]+), ((?!name)[^,>=]*)=([^,>]+)><>(.*):.*
+  name: kafka_broker_$1_$2_$7
+  labels:
+    "$3": "$4"
+    "$5": "$6"
+  type: COUNTER
+  valueFactor: 1
+
+## Metrics for Memory MBean
+- pattern: java\.lang<type=Memory><(\w+)MemoryUsage>(\w+)
+  name: "java_memory"
+  labels:
+    type: "$1"
+    key: "$2"
+  type: COUNTER
+  attrNameSnakeCase: false
+  valueFactor: 1
+- pattern: java\.lang<type=Memory><>(\w+)
+  name: "java_memory"
+  labels:
+    key: "$1"
+  type: COUNTER
+  valueFactor: 1
+## Metrics for GarbageCollector MBean
+- pattern: java\.lang<type=GarbageCollector, name=(.*), key=(.*?[^>])><(.*), (.*)>(\w+)
+  name: "java_garbage_collector_$5"
+  labels:
+    type: "$1"
+    key: "$2"
+    group: "$3"
+    when: "$4"
+  type: COUNTER
+  valueFactor: 1
+- pattern: java\.lang<type=GarbageCollector, name=(.*?[^>])><>(\w+)
+  name: "java_garbage_collector"
+  labels:
+    type: "$1"
+    key: "$2"
+  type: COUNTER
+  valueFactor: 1
+- pattern: java\.lang<type=GarbageCollector, name=(.*?[^>])><(\w+)>(\w+)
+  name: "java_garbage_collector_$3"
+  labels:
+    type: "$1"
+    group: "$2"
+  type: COUNTER
+  valueFactor: 1
+## Metrics for MemoryManager MBean
+- pattern: java\.lang<type=MemoryManager, name=(.*)><>(\w+)
+  name: "java_memory_manager"
+  labels:
+    type: "$1"
+    key: "$2"
+  type: COUNTER
+  valueFactor: 1
+## Metrics for MemoryPool MBean
+- pattern: java\.lang<type=MemoryPool, name=(.*?[^>])><(Usage)>(\w+)
+  name: "java_memory_pool_$3"
+  labels:
+    type: "$1"
+    group: "$2"
+  type: COUNTER
+  valueFactor: 1
+- pattern: java\.lang<type=MemoryPool, name=(.*?[^>])><(PeakUsage)>(\w+)
+  name: "java_memory_pool_$3"
+  labels:
+    type: "$1"
+    group: "$2"
+  type: COUNTER
+  valueFactor: 1
+- pattern: java\.lang<type=MemoryPool, name=(.*?[^>])><(CollectionUsage)>(\w+)
+  name: "java_memory_pool_$3"
+  labels:
+    type: "$1"
+    group: "$2"
+  type: COUNTER
+  valueFactor: 1
+- pattern: java\.lang<type=MemoryPool, name=(.*?[^>])><(UsageThreshold)>(\w+)
+  name: "java_memory_pool_$3"
+  labels:
+    type: "$1"
+    group: "$2"
+  type: COUNTER
+  valueFactor: 1
+## This one can be used in case all metrics groups are wanted
+#- pattern: java\.lang<type=MemoryPool, name=(.*?[^>])><(\w+)>(\w+)"
+#  name: "java_memory_pool_$3"
+#  labels:
+#    type: "$1"
+#    group: "$2"
+#  type: COUNTER
+#  valueFactor: 1
+## Memory pool base
+- pattern: java\.lang<type=MemoryPool, name=(.*?[^>])><>(\w+)
+  name: "java_memory_pool_$2"
+  labels:
+    type: "$1"
+  type: COUNTER
+  valueFactor: 1
+## Metrics for OperatingSystem MBean
+- pattern: java\.lang<type=OperatingSystem><>(\w+)
+  name: "java_operating_system"
+  labels:
+    key: "$1"
+  type: COUNTER
+  valueFactor: 1
+## Metrics for Runtime MBean
+- pattern: java\.lang<type=Runtime><>(\w+)
+  name: "java_runtime"
+  labels:
+    key: "$1"
+  type: COUNTER
+  valueFactor: 1
+## Metrics for Threading MBean
+- pattern: java\.lang<type=Threading><>(\w+)
+  name: "java_threading"
+  labels:
+    key: "$1"
+  type: COUNTER
+  valueFactor: 1
+## Metrics for ClassLoading MBean
+- pattern: java\.lang<type=ClassLoading><>(\w+)
+  name: "java_class_loading"
+  labels:
+    key: "$1"
+  type: COUNTER
+  valueFactor: 1
+## Metrics for Compilation MBean
+- pattern: java\.lang<type=Compilation><>(\w+)
+  name: "java_compilation"
+  labels:
+    key: "$1"
+  type: COUNTER
+  valueFactor: 1
+
+#- pattern: ".*"
