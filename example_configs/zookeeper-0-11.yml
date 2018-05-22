@@ -1,0 +1,154 @@
+rules:
+- pattern: "org\\.apache\\.ZooKeeperService<name0=ReplicatedServer_id(\\d)><>(\\w+)"
+  name: "zookeeper_$2"
+  labels:
+    replicaId: "$1"
+- pattern: "org\\.apache\\.ZooKeeperService<name0=ReplicatedServer_id(\\d), name1=replica.(\\d)><>(\\w+)"
+  name: "zookeeper_$3"
+  labels:
+    replicaId: "$2"
+- pattern: "org\\.apache\\.ZooKeeperService<name0=ReplicatedServer_id(\\d), name1=replica.(\\d), name2=(\\w+)><>(\\w+)"
+  name: "zookeeper_$4"
+  labels:
+    replicaId: "$2"
+    memberType: "$3"
+- pattern: "org\\.apache\\.ZooKeeperService<name0=ReplicatedServer_id(\\d), name1=replica.(\\d), name2=(\\w+), name3=(\\w+)><>(\\w+)"
+  name: "zookeeper_$4_$5"
+  labels:
+    replicaId: "$2"
+    memberType: "$3"
+- pattern: "org\\.apache\\.ZooKeeperService<name0=ReplicatedServer_id(\\d), name1=replica.(\\d), name2=(\\w+), name3=(\\w+), name4=(.*), name5=(\\w+)><>(\\w+)"
+  name: "zookeeper_$4_$7"
+  labels:
+    replicaId: "$2"
+    memberType: "$3"
+
+## Metrics for Memory MBean
+- pattern: java\.lang<type=Memory><(\w+)MemoryUsage>(\w+)
+  name: "java_memory"
+  labels:
+    type: "$1"
+    key: "$2"
+  type: COUNTER
+  attrNameSnakeCase: false
+  valueFactor: 1
+- pattern: java\.lang<type=Memory><>(\w+)
+  name: "java_memory"
+  labels:
+    key: "$1"
+  type: COUNTER
+  valueFactor: 1
+## Metrics for GarbageCollector MBean
+- pattern: java\.lang<type=GarbageCollector, name=(.*), key=(.*?[^>])><(.*), (.*)>(\w+)
+  name: "java_garbage_collector_$5"
+  labels:
+    type: "$1"
+    key: "$2"
+    group: "$3"
+    when: "$4"
+  type: COUNTER
+  valueFactor: 1
+- pattern: java\.lang<type=GarbageCollector, name=(.*?[^>])><>(\w+)
+  name: "java_garbage_collector"
+  labels:
+    type: "$1"
+    key: "$2"
+  type: COUNTER
+  valueFactor: 1
+- pattern: java\.lang<type=GarbageCollector, name=(.*?[^>])><(\w+)>(\w+)
+  name: "java_garbage_collector_$3"
+  labels:
+    type: "$1"
+    group: "$2"
+  type: COUNTER
+  valueFactor: 1
+## Metrics for MemoryManager MBean
+- pattern: java\.lang<type=MemoryManager, name=(.*)><>(\w+)
+  name: "java_memory_manager"
+  labels:
+    type: "$1"
+    key: "$2"
+  type: COUNTER
+  valueFactor: 1
+## Metrics for MemoryPool MBean
+- pattern: java\.lang<type=MemoryPool, name=(.*?[^>])><(Usage)>(\w+)
+  name: "java_memory_pool_$3"
+  labels:
+    type: "$1"
+    group: "$2"
+  type: COUNTER
+  valueFactor: 1
+- pattern: java\.lang<type=MemoryPool, name=(.*?[^>])><(PeakUsage)>(\w+)
+  name: "java_memory_pool_$3"
+  labels:
+    type: "$1"
+    group: "$2"
+  type: COUNTER
+  valueFactor: 1
+- pattern: java\.lang<type=MemoryPool, name=(.*?[^>])><(CollectionUsage)>(\w+)
+  name: "java_memory_pool_$3"
+  labels:
+    type: "$1"
+    group: "$2"
+  type: COUNTER
+  valueFactor: 1
+- pattern: java\.lang<type=MemoryPool, name=(.*?[^>])><(UsageThreshold)>(\w+)
+  name: "java_memory_pool_$3"
+  labels:
+    type: "$1"
+    group: "$2"
+  type: COUNTER
+  valueFactor: 1
+## This one can be used in case all metrics groups are wanted
+#- pattern: java\.lang<type=MemoryPool, name=(.*?[^>])><(\w+)>(\w+)"
+#  name: "java_memory_pool_$3"
+#  labels:
+#    type: "$1"
+#    group: "$2"
+#  type: COUNTER
+#  valueFactor: 1
+## Memory pool base
+- pattern: java\.lang<type=MemoryPool, name=(.*?[^>])><>(\w+)
+  name: "java_memory_pool_$2"
+  labels:
+    type: "$1"
+  type: COUNTER
+  valueFactor: 1
+## Metrics for OperatingSystem MBean
+- pattern: java\.lang<type=OperatingSystem><>(\w+)
+  name: "java_operating_system"
+  labels:
+    key: "$1"
+  type: COUNTER
+  valueFactor: 1
+## Metrics for Runtime MBean
+- pattern: java\.lang<type=Runtime><>(\w+)
+  name: "java_runtime"
+  labels:
+    key: "$1"
+  type: COUNTER
+  valueFactor: 1
+## Metrics for Threading MBean
+- pattern: java\.lang<type=Threading><>(\w+)
+  name: "java_threading"
+  labels:
+    key: "$1"
+  type: COUNTER
+  valueFactor: 1
+## Metrics for ClassLoading MBean
+- pattern: java\.lang<type=ClassLoading><>(\w+)
+  name: "java_class_loading"
+  labels:
+    key: "$1"
+  type: COUNTER
+  valueFactor: 1
+## Metrics for Compilation MBean
+- pattern: java\.lang<type=Compilation><>(\w+)
+  name: "java_compilation"
+  labels:
+    key: "$1"
+  type: COUNTER
+  valueFactor: 1
+
+
+- pattern: ".*"
